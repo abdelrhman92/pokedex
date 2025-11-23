@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import type { PokemonCardData } from '../types/pokemon';
 
 interface PokemonCardProps {
@@ -27,7 +28,10 @@ const TYPE_COLORS: Record<string, string> = {
 
 export function PokemonCard({ pokemon }: PokemonCardProps) {
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+    <Link
+      to={`/pokemon/${pokemon.id}`}
+      className="block bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer"
+    >
       <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center p-4">
         <img
           src={pokemon.sprite}
@@ -58,6 +62,6 @@ export function PokemonCard({ pokemon }: PokemonCardProps) {
           ))}
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

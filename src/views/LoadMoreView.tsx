@@ -26,12 +26,13 @@ function PokemonInfiniteGrid() {
           <button
             onClick={() => fetchNextPage()}
             disabled={isFetchingNextPage}
-            className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 text-sm font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ backgroundColor: '#fefefe', color: '#171717' }}
           >
             {isFetchingNextPage ? (
               <span className="flex items-center gap-2">
                 <svg
-                  className="animate-spin h-5 w-5"
+                  className="animate-spin h-4 w-4"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -83,10 +84,6 @@ function InitialLoading() {
 export function LoadMoreView() {
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">
-        Pokédex - Load More View
-      </h1>
-
       <ErrorBoundary
         fallback={(error, reset) => <ErrorFallback error={error} resetErrorBoundary={reset} />}
       >

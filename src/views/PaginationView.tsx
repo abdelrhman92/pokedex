@@ -6,7 +6,7 @@ import { ErrorFallback } from '../components/ErrorFallback';
 import { usePokemonList } from '../hooks/usePokemonList';
 import { POKEMON_PER_PAGE } from '../services/pokeapi';
 
-function PokemonGrid({ page }: { page: number }) {
+function PokemonGrid({ page, onPageChange }: { page: number; onPageChange: (page: number) => void }) {
   const offset = (page - 1) * POKEMON_PER_PAGE;
   const { data } = usePokemonList(offset, POKEMON_PER_PAGE);
 
@@ -17,7 +17,7 @@ function PokemonGrid({ page }: { page: number }) {
           <PokemonCard key={pokemon.id} pokemon={pokemon} />
         ))}
       </div>
-      <Pagination currentPage={page} totalCount={data.total} />
+      <Pagination currentPage={page} totalCount={data.total} onPageChange={onPageChange} />
     </>
   );
 }
@@ -35,14 +35,14 @@ function LoadingGrid() {
 interface PaginationProps {
   currentPage: number;
   totalCount: number;
+  onPageChange: (page: number) => void;
 }
 
-function Pagination({ currentPage, totalCount }: PaginationProps) {
+function Pagination({ currentPage, totalCount, onPageChange }: PaginationProps) {
   const totalPages = Math.ceil(totalCount / POKEMON_PER_PAGE);
-  const [, setPage] = useState(currentPage);
 
   const goToPage = (page: number) => {
-    setPage(page);
+    onPageChange(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -80,7 +80,8 @@ function Pagination({ currentPage, totalCount }: PaginationProps) {
       <button
         onClick={() => goToPage(currentPage - 1)}
         disabled={currentPage === 1}
-        className="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="px-3 py-1.5 text-sm rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        style={{ backgroundColor: '#fefefe', color: '#171717' }}
       >
         Previous
       </button>
@@ -90,11 +91,11 @@ function Pagination({ currentPage, totalCount }: PaginationProps) {
           <button
             key={index}
             onClick={() => goToPage(page)}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              currentPage === page
-                ? 'bg-blue-600 text-white'
-                : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-            }`}
+            className="px-3 py-1.5 text-sm rounded-lg font-medium transition-colors"
+            style={{
+              backgroundColor: currentPage === page ? '#171717' : '#fefefe',
+              color: currentPage === page ? '#fefefe' : '#171717'
+            }}
           >
             {page}
           </button>
@@ -108,7 +109,8 @@ function Pagination({ currentPage, totalCount }: PaginationProps) {
       <button
         onClick={() => goToPage(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="px-3 py-1.5 text-sm rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        style={{ backgroundColor: '#fefefe', color: '#171717' }}
       >
         Next
       </button>
@@ -121,15 +123,11 @@ export function PaginationView() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">
-        Pokédex - Pagination View
-      </h1>
-
       <ErrorBoundary
         fallback={(error, reset) => <ErrorFallback error={error} resetErrorBoundary={reset} />}
       >
         <Suspense fallback={<LoadingGrid />}>
-          <PokemonGrid page={currentPage} key={currentPage} />
+          <PokemonGrid page={currentPage} onPageChange={setCurrentPage} key={currentPage} />
         </Suspense>
       </ErrorBoundary>
     </div>
